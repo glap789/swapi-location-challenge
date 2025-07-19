@@ -55,7 +55,7 @@ Este proyecto utiliza la API pública de [SWAPI](https://swapi.dev/) (Star Wars 
 ## ⚙️ Instalación
 
 git clone https://github.com/glap789/swapi-location-challenge<br>
-swapi-location-challenge<br>
+cd swapi-location-challenge<br>
 npm install
 
 ---
