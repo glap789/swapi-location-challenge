@@ -78,7 +78,7 @@ serverless deploy
 ## 🧠 Endpoints Disponibles
 
 - > TOKEN_JWT: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6InVzdWFyaW8xMjMiLCJlbWFpbCI6InVzdWFyaW9AZWplbXBsby5jb20ifQ.YgYST3Qin6d0pKvoAD3orS5sBfjD4yZCimsjU2OxLIg
-- > API_ID: 3j2ytcjio5
+- > API_ID: a8jjvzre8g
 
 | Método | Endpoint                                                           | Descripción                                                           |
 | ------ | ------------------------------------------------------------------ | --------------------------------------------------------------------- |

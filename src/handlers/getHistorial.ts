@@ -52,7 +52,7 @@ export const handler: APIGatewayProxyHandlerV2 = async (event) => {
       body: JSON.stringify({
         mensaje: isUnauthorized
           ? 'No autorizado: token inválido o ausente'
-          : 'Error al guardar en base de datos',
+          : 'Problemas con apis internas, volver a intentar',
       }),
     };
   }
