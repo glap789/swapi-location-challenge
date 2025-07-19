@@ -1,0 +1,33 @@
+{
+  "name": "swapi-location-challenge",
+  "version": "1.0.0",
+  "description": "Backend Nodejs/AWS Challenge",
+  "main": "handler.js",
+  "scripts": {
+    "dev": "serverless offline start",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.592.0",
+    "@aws-sdk/lib-dynamodb": "^3.592.0",
+    "axios": "^1.7.2",
+    "jsonwebtoken": "^9.0.2",
+    "source-map-support": "^0.5.21",
+    "uuid": "^9.0.1",
+    "zod": "^3.25.74"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.138",
+    "@types/jest": "^30.0.0",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^20.12.12",
+    "@types/uuid": "^9.0.8",
+    "aws-sdk-client-mock": "^4.1.0",
+    "jest": "^30.0.4",
+    "serverless": "^3.38.0",
+    "serverless-offline": "^13.3.4",
+    "serverless-plugin-typescript": "^2.1.5",
+    "ts-jest": "^29.4.0",
+    "typescript": "^5.4.5"
+  }
+}

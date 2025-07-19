@@ -1,0 +1,128 @@
+service: swapi-location-challenge
+
+frameworkVersion: '3'
+
+plugins:
+  - serverless-plugin-typescript
+  - serverless-offline
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  logRetentionInDays: 14
+  architecture: arm64
+  region: us-east-1
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:PutItem
+            - dynamodb:GetItem
+            - dynamodb:Query
+            - dynamodb:Scan
+          Resource:
+            - "arn:aws:dynamodb:${aws:region}:${aws:accountId}:table/${self:custom.fusionHistoryTable}"
+            - "arn:aws:dynamodb:${aws:region}:${aws:accountId}:table/${self:custom.fusionHistoryTable}/index/ChronologicalIndex"
+            - "arn:aws:dynamodb:${aws:region}:${aws:accountId}:table/${self:custom.customDataTable}"
+            - "arn:aws:dynamodb:${aws:region}:${aws:accountId}:table/${self:custom.apiCacheTable}"
+  
+  environment:
+    FUSION_HISTORY_TABLE: ${self:custom.fusionHistoryTable}
+    CUSTOM_DATA_TABLE: ${self:custom.customDataTable}
+    API_CACHE_TABLE: ${self:custom.apiCacheTable}
+    JWT_SECRET: ${self:custom.secreto_jwt}
+
+package:
+  individually: true
+  
+functions:
+  fusionados:
+    handler: src/handlers/getFusionados.handler
+    memorySize: 256
+    timeout: 12
+    events:
+      - httpApi:
+          path: /fusionados
+          method: get
+  
+  almacenar:
+    handler: src/handlers/postAlmacenar.handler
+    memorySize: 256
+    timeout: 12
+    events:
+      - httpApi:
+          path: /almacenar
+          method: post
+
+  historial:
+    handler: src/handlers/getHistorial.handler
+    memorySize: 256
+    timeout: 12
+    events:
+      - httpApi:
+          path: /historial
+          method: get
+
+custom:
+  serverless-offline:
+    httpPort: 3000
+    noPrependStageInUrl: true
+  fusionHistoryTable: FusionHistoryTable-${sls:stage}
+  customDataTable: CustomDataTable-${sls:stage}
+  apiCacheTable: ApiCacheTable-${sls:stage}
+  secreto_jwt: jwt-secret-token-to-softtek-i-love-u
+
+resources:
+  Resources:
+    FusionHistoryTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.fusionHistoryTable}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+          - AttributeName: recordType 
+            AttributeType: S
+          - AttributeName: fechaCreacion
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+        GlobalSecondaryIndexes:
+          - IndexName: ChronologicalIndex
+            KeySchema:
+              - AttributeName: recordType 
+                KeyType: HASH
+              - AttributeName: fechaCreacion 
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+
+    CustomDataTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.customDataTable}
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+
+    ApiCacheTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.apiCacheTable}
+        AttributeDefinitions:
+          - AttributeName: cacheKey
+            AttributeType: S
+        KeySchema:
+          - AttributeName: cacheKey
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+        TimeToLiveSpecification:
+          AttributeName: expirationTime
+          Enabled: true
